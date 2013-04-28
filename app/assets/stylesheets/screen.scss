@@ -13,6 +13,11 @@ body {
   font-weight: 300;
 }
 
+input, button, textarea, select, option {
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-size: 100%;
+}
+
 .authenticated-content, .unauthenticated-content {
   display: none;
 }
@@ -51,31 +56,90 @@ p {
 
 #wrap {
   background: #fff;
-  width: 100%;
-  max-width: 400px;
+  width: 420px;
   margin: 0 auto;
   border: 1px solid rgba(0,0,0,0.2);
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
   border-radius: 3px;
 }
 
+.loading {
+  color: rgba(0,0,0,0.5);
+  font-size: 140%;
+  text-align: center;
+  padding: 0 0 20px;
+}
+
 #content {
   padding: 0 20px 20px;
 }
 
-pre {
-  background: rgba(255, 248, 210, 1);
-  border: 1px solid rgba(0,0,0,0.1);
-  border-radius: 3px;
-  padding: 20px;
+#content.broadcast {
+  .intro {
+    margin: 0 0 20px;
+  }
 
-  * {
-    color: #000;
+  pre {
+    background: rgba(255, 248, 210, 1);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 3px;
+    padding: 20px;
+
+    * {
+      color: #000;
+    }
   }
 }
 
-.intro {
-  margin: 0 0 20px;
+#content.home {
+  .broadcast {
+  }
+
+  .listen {
+    input {
+      padding: 4px;
+      border-radius: 3px;
+      border: 1px solid #ccc;
+    }
+  }
+
+  .or {
+    font-size: 150%;
+    color: rgba(0,0,0,0.6);
+    text-align: center;
+    margin: 30px 0 10px;
+    border-top: 1px solid rgba(0,0,0,0.4);
+
+    span {
+      position: relative;
+      top: -0.7em;
+      background: #fff;
+      padding: 8px;
+    }
+  }
+
+  .button {
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    font-size: 110%;
+    font-family: 'Signika Negative', "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: 600;
+    display: inline-block;
+    border-radius: 3px;
+    cursor: pointer;
+
+    &.broadcast {
+      background: rgba(96, 70, 255, 1);
+      &:hover { background: rgba(96, 70, 255, 0.9); }
+    }
+
+    &.listen {
+      background: rgba(255, 107, 100, 1);
+      &:hover { background: rgba(255, 107, 100, 0.9); }
+    }
+
+  }
 }
 
 .hud {
@@ -83,6 +147,31 @@ pre {
   border: 1px solid rgba(0,0,0,0.1);
   border-radius: 3px;
   padding: 20px;
+  position: relative;
+
+  &.paused {
+    .hud-inner {
+      z-index: 1;
+      position: relative;
+      opacity: 0.2;
+    }
+
+    .paused {
+      display: block;
+    }
+  }
+
+  .paused {
+    display: none;
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    margin: -15px 0 0 -50px;
+    font-size: 170%;
+    font-weight: 600;
+    color: rgba(0,0,0,0.6);
+  }
 
   .icon {
     float: left;

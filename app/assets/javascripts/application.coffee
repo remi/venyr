@@ -24,8 +24,10 @@ class Home
 
   initTemplate: ->
     if R.authenticated()
+      $('.loading').hide()
       $('.authenticated-content').show()
     else
+      $('.loading').hide()
       $('.unauthenticated-content').show()
 
   initEvents: ->
@@ -47,6 +49,9 @@ class Hud
     @trackAlbum.text(track.get('album'))
     @trackIcon.attr('src', track.get('icon'))
 
+  updateState: (state) ->
+    @$e.toggleClass('paused', state == 0)
+
 class Broadcaster
   constructor: ->
     @initTemplate()
@@ -56,6 +61,7 @@ class Broadcaster
     $('.rdio-user').text(R.currentUser.get('vanityName'))
     $('.broadcast-url').forEach (e) -> e.setAttribute('href', $(e).text())
     @hud = new Hud(e: $('.hud'))
+    $('.loading').hide()
     $('.authenticated-content').show()
 
   initEvents: ->
@@ -78,6 +84,7 @@ class Broadcaster
     @ws.send JSON.stringify({ event: 'playingTrackChange', data: { key: track.get('key') } })
 
   onPlayStateChange: (state) =>
+    @hud.updateState(state)
     @ws.send JSON.stringify({ event: 'playStateChange', data: { state: state } })
 
 class Listener
@@ -88,6 +95,7 @@ class Listener
   initTemplate: ->
     $('.rdio-user').text(R.currentUser.get('vanityName'))
     @hud = new Hud(e: $('.hud'))
+    $('.loading').hide()
     $('.authenticated-content').show()
 
   socketPath: ->

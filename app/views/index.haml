@@ -1,11 +1,28 @@
-.authenticated-content
-  %p
-    %a{ href: '/broadcast' } Broadcast
-  %p
-    %form{ action: '/listen/%user', method: 'get' }
-      %label{ for: 'listen-user' } Listen to
-      %input{ id: 'listen-user', type: 'text' }
-      %button{ type: 'submit' } Listen!
+- content_for :title do
+  — Broadcast your Rdio playback to your friends
 
-.unauthenticated-content
-  %p Welcome to Venyr. Please sign in to Rdio.
+#content.home
+  .loading
+    Loading…
+  .authenticated-content
+    .broadcast
+      %p
+        <strong>Broadcast your Rdio playback</strong><br />
+        People will be able to sync their Rdio playback to yours.
+      %a.button.broadcast{ href: '/broadcast' } Broadcast!
+
+    .or
+      %span OR
+
+    .listen
+      %p
+        Know a friend who’s broadcasting?<br />
+        <strong>Sync your Rdio playback</strong> to his/her.
+      %form{ action: '/listen/%user', method: 'get' }
+        %p
+          %label{ for: 'listen-user' } Listen to
+          %input{ id: 'listen-user', type: 'text' }
+        %button.button.listen{ type: 'submit' } Listen!
+
+  .unauthenticated-content
+    %p Welcome to Venyr. Please sign in to Rdio.
