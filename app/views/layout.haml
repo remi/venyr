@@ -2,7 +2,7 @@
 %html{ :lang => :en }
   %head
     %meta{ :charset => "utf-8" }
-    %title Rdio Mirror
+    %title Rdio Mirror #{yield_content(:title)}
     = stylesheet_tag('screen')
     %script{ :src => "https://rdio.com/api/api.js?client_id=#{ENV['RDIO_CLIENT_ID']}" }
     = yield_content(:head)
