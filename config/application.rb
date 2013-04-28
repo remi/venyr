@@ -1,35 +1,3 @@
-class BroadcastChannel < OpenStruct
-  def listen_channels
-    $listen_channels.select { |c| c.user == self.user }
-  end
-
-  def self.find_by_user(user)
-    $broadcast_channels.select { |c| c.user == user }.first
-  end
-
-  def self.find_by_ws(ws)
-    $broadcast_channels.select { |c| c.ws == ws }.first
-  end
-
-  def close
-    $broadcast_channels.delete(self)
-  end
-end
-
-class ListenChannel < OpenStruct
-  def self.find_by_ws(ws)
-    $listen_channels.select { |c| c.ws == ws }.first
-  end
-
-  def close
-    $listen_channels.delete(self)
-  end
-end
-
-# TODO SQLite memory or something?
-$broadcast_channels = []
-$listen_channels = []
-
 class App < Sinatra::Base
   # Middleware
   use Rack::CanonicalHost, ENV['CANONICAL_HOST']
@@ -47,47 +15,52 @@ class App < Sinatra::Base
 
     enable :static
     enable :partial_underscores
+
+    $broadcast_channels = []
+    $listen_channels = []
   end
 
   # Helpers
   helpers Sprockets::Helpers
   helpers Sinatra::ContentFor
-  helpers do
-    def logger
-      request.logger
-    end
-  end
+  helpers LoggerHelper
 
   # Sockets
   get "/broadcast/:user/live" do
-    request.websocket do |ws|
+    request.websocket do |socket|
       current_channel = nil
 
-      ws.onopen do
+      socket.onopen do
         # TODO Use params[:token] to make sure this is the real params[:user]
-        current_channel = BroadcastChannel.new(user: params[:user], ws: ws)
+        current_channel = BroadcastChannel.new(user: params[:user], socket: socket)
         $broadcast_channels << current_channel
       end
 
-      ws.onclose { current_channel.close }
+      socket.onclose { current_channel.close }
 
-      ws.onmessage do |message|
-        # Forward the message to the listeners
-        EM.next_tick { current_channel.listen_channels.each { |channel| channel.ws.send(message) } }
+      socket.onmessage do |message|
+        EM.next_tick do
+          current_channel.update_current_data(message)
+          current_channel.listen_channels.each { |channel| channel.socket.send(message) }
+        end
       end
     end
   end
 
   get "/listen/:user/live" do
-    request.websocket do |ws|
+    request.websocket do |socket|
       current_channel = nil
 
-      ws.onopen do
-        current_channel = ListenChannel.new(user: params[:user], ws: ws)
+      socket.onopen do
+        current_channel = ListenChannel.new(user: params[:user], socket: socket)
         $listen_channels << current_channel
+
+        broadcast_channel = BroadcastChannel.find_by_user(params[:user])
+        socket.send MultiJson.dump({ event: 'playingTrackChange', data: { key: broadcast_channel.current_track } })
+        socket.send MultiJson.dump({ event: 'playStateChange', data: { state: broadcast_channel.current_state } })
       end
 
-      ws.onclose { current_channel.close }
+      socket.onclose { current_channel.close }
     end
   end
 
