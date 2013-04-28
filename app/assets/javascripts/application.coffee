@@ -32,6 +32,21 @@ class Home
     $('form').bind 'submit', (e) ->
       e.target.setAttribute('action', e.target.getAttribute('action').replace(/%user/, R.currentUser.get('vanityName')))
 
+class Hud
+  constructor: (opts = {}) ->
+    @opts = opts
+    @$e = $(@opts.e)
+    @trackName = @$e.find('.rdio-track-title')
+    @trackArtist = @$e.find('.rdio-track-artist')
+    @trackAlbum = @$e.find('.rdio-track-album')
+    @trackIcon = @$e.find('.rdio-track-icon')
+
+  updateTrack: (track) ->
+    @trackName.text(track.get('name'))
+    @trackArtist.text(track.get('artist'))
+    @trackAlbum.text(track.get('album'))
+    @trackIcon.attr('src', track.get('icon'))
+
 class Broadcaster
   constructor: ->
     @initTemplate()
@@ -40,6 +55,7 @@ class Broadcaster
   initTemplate: ->
     $('.rdio-user').text(R.currentUser.get('vanityName'))
     $('.broadcast-url').forEach (e) -> e.setAttribute('href', $(e).text())
+    @hud = new Hud(e: $('.hud'))
     $('.authenticated-content').show()
 
   initEvents: ->
@@ -58,6 +74,7 @@ class Broadcaster
     @ws.onclose = -> console.log('The WebSocket has closed')
 
   onPlayingTrackChange: (track) =>
+    @hud.updateTrack(track)
     @ws.send JSON.stringify({ event: 'playingTrackChange', data: { key: track.get('key') } })
 
   onPlayStateChange: (state) =>
@@ -70,6 +87,7 @@ class Listener
 
   initTemplate: ->
     $('.rdio-user').text(R.currentUser.get('vanityName'))
+    @hud = new Hud(e: $('.hud'))
     $('.authenticated-content').show()
 
   socketPath: ->

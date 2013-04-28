@@ -4,13 +4,15 @@
     %meta{ :charset => "utf-8" }
     %title Venyr #{yield_content(:title)}
     = stylesheet_tag('screen')
+    = stylesheet_tag('http://fonts.googleapis.com/css?family=Signika+Negative:300,400,600,700')
     %script{ :src => "https://rdio.com/api/api.js?client_id=#{ENV['RDIO_CLIENT_ID']}" }
     = yield_content(:head)
   %body
-    %header
-      %h1
-        %a{ href: '/' } Venyr
-    = yield
+    #wrap
+      %header
+        %h1
+          %a{ href: '/' } Venyr
+      = yield
     :plain
       <script>document.write('<script src="//cdnjs.cloudflare.com/ajax/libs/' +
       ('__proto__' in {} && !/firefox\/3/i.test(navigator.userAgent) ?
