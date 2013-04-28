@@ -60,13 +60,20 @@ class App < Sinatra::Base
         socket.send MultiJson.dump({ event: 'playStateChange', data: { state: broadcast_channel.current_state } })
       end
 
-      socket.onclose { current_channel.close }
+      socket.onclose do
+        # TODO Notify all current_channel.listen_channels with a custom event?
+        current_channel.close
+      end
     end
   end
 
   # Routes
   get "/" do
     haml :index
+  end
+
+  error 404 do
+    haml :'404'
   end
 
   get "/listen/:user" do

@@ -1,5 +1,11 @@
 - content_for :title do
   — Broadcast Mode
 
+.authenticated-content
+  %h2 Yay! You are now broadcasting!
+  %p Keep this tab open and everything will be alright.
+  %p Users can now listen to what you’re listening to by going to:
+  %p <a class="broadcast-url">http://#{ENV["CANONICAL_HOST"]}/listen/<span class="rdio-user" /></a>
+
 %script
   window.VenyrType = 'broadcast'

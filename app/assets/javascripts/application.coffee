@@ -4,21 +4,43 @@ class Venyr
     R.ready(@init)
 
   init: =>
-    return @showAuthentication() unless R.authenticated()
+    return @goHome() if @opts.type and !R.authenticated()
     @broadcaster = new Broadcaster if @opts.type == 'broadcast'
     @listener = new Listener if @opts.type == 'listen'
+    @listener = new Home if !@opts.type
 
   authenticate: ->
     # TODO
     R.authenticate (authenticated) =>
       alert('You are authenticated') if authenticated
 
-  showAuthentication: ->
+  goHome: ->
     window.location = "/"
+
+class Home
+  constructor: ->
+    @initTemplate()
+    @initEvents()
+
+  initTemplate: ->
+    if R.authenticated()
+      $('.authenticated-content').show()
+    else
+      $('.unauthenticated-content').show()
+
+  initEvents: ->
+    $('form').bind 'submit', (e) ->
+      e.target.setAttribute('action', e.target.getAttribute('action').replace(/%user/, R.currentUser.get('vanityName')))
 
 class Broadcaster
   constructor: ->
+    @initTemplate()
     @initSocket()
+
+  initTemplate: ->
+    $('.rdio-user').text(R.currentUser.get('vanityName'))
+    $('.broadcast-url').forEach (e) -> e.setAttribute('href', $(e).text())
+    $('.authenticated-content').show()
 
   initEvents: ->
     R.player.on 'change:playState', @onPlayStateChange
@@ -43,7 +65,12 @@ class Broadcaster
 
 class Listener
   constructor: ->
+    @initTemplate()
     @initSocket()
+
+  initTemplate: ->
+    $('.rdio-user').text(R.currentUser.get('vanityName'))
+    $('.authenticated-content').show()
 
   socketPath: ->
     window.location.pathname + '/live'
@@ -71,4 +98,5 @@ class Listener
     # TODO
     # R.player.play(source: key)
 
-window.Venyr = new Venyr(type: window.VenyrType)
+$(document).ready ->
+  window.Venyr = new Venyr(type: window.VenyrType)
