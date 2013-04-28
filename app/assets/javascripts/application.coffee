@@ -1,12 +1,12 @@
-class RdioMirror
+class Venyr
   constructor: (opts = {}) ->
     @opts = opts
     R.ready(@init)
 
   init: =>
     return @showAuthentication() unless R.authenticated()
-    @broadcaster = new RdioBroadcaster if @opts.type == 'broadcast'
-    @listener = new RdioListener if @opts.type == 'listen'
+    @broadcaster = new Broadcaster if @opts.type == 'broadcast'
+    @listener = new Listener if @opts.type == 'listen'
 
   authenticate: ->
     # TODO
@@ -16,7 +16,7 @@ class RdioMirror
   showAuthentication: ->
     window.location = "/"
 
-class RdioBroadcaster
+class Broadcaster
   constructor: ->
     @initSocket()
 
@@ -41,7 +41,7 @@ class RdioBroadcaster
   onPlayStateChange: (state) =>
     @ws.send JSON.stringify({ event: 'playStateChange', data: { state: state } })
 
-class RdioListener
+class Listener
   constructor: ->
     @initSocket()
 
@@ -71,4 +71,4 @@ class RdioListener
     # TODO
     # R.player.play(source: key)
 
-window.RdioMirror = new RdioMirror(type: window.RdioMirrorType)
+window.Venyr = new Venyr(type: window.VenyrType)
