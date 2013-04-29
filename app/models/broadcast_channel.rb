@@ -1,7 +1,8 @@
 class BroadcastChannel < OpenStruct
   def initialize(*args)
     super(*args)
-    @listeners_count = 0
+    @listeners_count = listen_channels.count
+    update_listeners
   end
 
   def listen_channels

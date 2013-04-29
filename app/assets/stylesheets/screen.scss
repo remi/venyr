@@ -25,6 +25,7 @@ input, button, textarea, select, option {
 
 a {
   text-decoration: none;
+  color: rgba(255, 107, 100, 1);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -70,6 +71,10 @@ p {
 
 img {
   max-width: 100%;
+}
+
+small {
+  font-size: 80%;
 }
 
 #wrap {
@@ -127,6 +132,12 @@ footer {
     * {
       color: #000;
     }
+  }
+}
+
+#content.listen {
+  .intro {
+    margin: 0 0 20px;
   }
 }
 
@@ -202,11 +213,16 @@ footer {
   padding: 20px;
   position: relative;
 
+  .hud-inner {
+    transition: opacity 0.2s linear, -webkit-filter 0.2s linear;
+  }
+
   &.paused {
     .hud-inner {
       z-index: 1;
       position: relative;
-      opacity: 0.2;
+      -webkit-filter: blur(7px);
+      opacity: 0.5;
     }
 
     .paused {
@@ -220,33 +236,49 @@ footer {
     z-index: 2;
     top: 50%;
     left: 50%;
-    margin: -15px 0 0 -50px;
+    margin: -19px 0 0 -50px;
     font-size: 170%;
-    font-weight: 600;
+    font-weight: 300;
     color: rgba(0,0,0,0.6);
+    border-top: 1px solid rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding: 6px 0;
   }
 
   .icon {
-    float: left;
     margin: 0 0 0 -80px;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
     border-radius: 3px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  a {
+    color: rgba(0,0,0,0.9);
+    display: block;
   }
 
   .infos {
-    margin: 0 0 0 40px;
+    margin: 0 0 0 15px;
+    display: inline-block;
+    vertical-align: middle;
+    width: 296px;
 
     h3 {
       font-size: 140%;
+      line-height: 1.1;
+      margin: 0 0 6px;
     }
 
     h4 {
-      font-size: 120%;
-      margin: 0 0 3px;
+      font-size: 110%;
+      line-height: 1.1;
+      margin: 0 0 7px;
     }
 
     h5 {
       font-size: 100%;
+      line-height: 1.1;
       color: rgba(0,0,0,0.5);
     }
   }

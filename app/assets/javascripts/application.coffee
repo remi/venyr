@@ -42,13 +42,15 @@ class Hud
     @trackArtist = @$e.find('.rdio-track-artist')
     @trackAlbum = @$e.find('.rdio-track-album')
     @trackIcon = @$e.find('.rdio-track-icon')
+    @trackURL = @$e.find('.rdio-track-url')
 
   updateTrack: (track) ->
     if track
-      @trackName.text(track.get('name'))
-      @trackArtist.text(track.get('artist'))
-      @trackAlbum.text(track.get('album'))
-      @trackIcon.attr('src', track.get('icon'))
+      @trackName.text(track.name)
+      @trackArtist.text(track.artist)
+      @trackAlbum.text(track.album)
+      @trackIcon.attr('src', track.icon)
+      @trackURL.attr('href', "http://www.rdio.com#{track.url}")
 
   updateState: (state) ->
     @$e.toggleClass('paused', state == 0)
@@ -71,7 +73,7 @@ class Broadcaster
 
     @onPlayingTrackChange(R.player.playingTrack())
     @onPlayStateChange(R.player.playState())
-    $(window).on 'beforeunload', -> 'This message is just there so you won’t accidentally close the Venyr tab while you’re broadcasting. But leave if you must!'
+    $(window).on 'beforeunload', -> 'This message is just there so you won’t accidentally close/reload the Venyr tab while you’re broadcasting. But leave if you must!'
 
   socketPath: ->
     window.location.pathname + '/' + R.currentUser.get('vanityName') + '/live?token=' + R.accessToken()
@@ -93,7 +95,7 @@ class Broadcaster
     $('.listeners-count').text(count)
 
   onPlayingTrackChange: (track) =>
-    @hud.updateTrack(track)
+    @hud.updateTrack(track.attributes)
     @ws.send JSON.stringify({ event: 'playingTrackChange', data: { track: track.attributes } })
 
   onPlayStateChange: (state) =>
@@ -104,9 +106,14 @@ class Listener
   constructor: ->
     @initTemplate()
     @initSocket()
+    @initEvents()
+
+  initEvents: ->
+    $(window).on 'beforeunload', -> 'This message is just there so you won’t accidentally close/reload the Venyr tab while you’re listening. But leave if you must!'
 
   initTemplate: ->
-    $('.rdio-user').text(R.currentUser.get('vanityName'))
+    vanityName = R.currentUser.get('vanityName')
+    $('.rdio-user-link').text(vanityName).wrap("<a href='http://www.rdio.com/people/#{vanityName}/'></a>")
     @hud = new Hud(e: $('.hud'))
     $('.loading').hide()
     $('.authenticated-content').show()
@@ -129,13 +136,13 @@ class Listener
 
   handlePlayStateChange: (state) ->
     console.log "Here, I would change the player state to #{state}"
+    @hud.updateState(state)
     # TODO
     # if state == 0 then R.player.pause() else R.player.play()
 
   handlePlayingTrackChange: (track) ->
     console.log "Here, I would trigger R.player.play(source: #{track.key})"
-    console.log "Also, I would update the HUD with this:"
-    console.log track
+    @hud.updateTrack(track)
     # TODO
     # R.player.play(source: key)
 
