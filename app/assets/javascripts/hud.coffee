@@ -13,8 +13,18 @@ class Venyr.Hud
       @trackName.text(track.name)
       @trackArtist.text(track.artist)
       @trackAlbum.text(track.album)
-      @trackIcon.attr('src', track.icon)
+      @trackIcon.attr('src', track.icon).show()
       @trackURL.attr('href', "http://www.rdio.com#{track.url}")
 
   updateState: (state) ->
     @$e.toggleClass('paused', state == 0)
+    @$e.toggleClass('stopped', state == 2)
+    @clear() if state == 2
+
+  clear: ->
+    @$e.addClass('stopped')
+    @trackName.text("")
+    @trackArtist.text("")
+    @trackAlbum.text("")
+    @trackIcon.removeAttr('src').hide()
+    @trackURL.attr('href', '')

@@ -36,7 +36,10 @@ class Venyr.Listener
     # if state == 0 then R.player.pause() else R.player.play()
 
   handlePlayingTrackChange: (track) ->
-    console.log "Here, I would trigger R.player.play(source: #{track.key})"
-    @hud.updateTrack(track)
-    # TODO
-    # R.player.play(source: key) # How does play work actually?
+    if track
+      console.log "Here, I would trigger R.player.play(source: #{track.key})"
+      @hud.updateTrack(track)
+      # TODO
+      # R.player.play(source: key) # How does play work actually?
+    else
+      @hud.clear()

@@ -15,7 +15,12 @@ class Venyr.Broadcaster
     R.player.on 'change:playingTrack', @onPlayingTrackChange
 
     @onPlayingTrackChange(R.player.playingTrack())
-    @onPlayStateChange(R.player.playState())
+
+    if R.player.playingTrack()
+      @onPlayStateChange(R.player.playState())
+    else
+      @hud.clear()
+
     $(window).on 'beforeunload', -> 'This message is just there so you won’t accidentally close/reload the Venyr tab while you’re broadcasting. But leave if you must!'
 
   socketPath: ->
@@ -39,8 +44,12 @@ class Venyr.Broadcaster
     $('.listeners-count').text(count)
 
   onPlayingTrackChange: (track) =>
-    @hud.updateTrack(track.attributes)
-    @ws.send JSON.stringify({ event: 'playingTrackChange', data: { track: track.attributes } })
+    if track
+      @hud.updateTrack(track.attributes)
+      @ws.send JSON.stringify({ event: 'playingTrackChange', data: { track: track.attributes } })
+    else
+      @hud.clear()
+      @ws.send JSON.stringify({ event: 'playingTrackChange', data: { track: null } })
 
   onPlayStateChange: (state) =>
     @hud.updateState(state)

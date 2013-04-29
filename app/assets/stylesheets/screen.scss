@@ -235,19 +235,29 @@ footer {
     }
   }
 
-  .paused {
+  &.stopped {
+    .stopped {
+      display: block;
+    }
+  }
+
+  .paused, .stopped {
     display: none;
     position: absolute;
     z-index: 2;
     top: 50%;
-    left: 50%;
-    margin: -19px 0 0 -50px;
+    left: 0;
+    margin: -17px 0 0 0;
     font-size: 170%;
     font-weight: 300;
     color: rgba(0,0,0,0.6);
-    border-top: 1px solid rgba(0,0,0,0.1);
-    border-bottom: 1px solid rgba(0,0,0,0.1);
-    padding: 6px 0;
+    width: 100%;
+    text-align: center;
+
+    &.stopped {
+      margin: -13px 0 0;
+      font-size: 130%;
+    }
   }
 
   .icon {
