@@ -42,8 +42,6 @@ header {
     position: relative;
     top: -105px;
     margin: 0 0 -105px;
-    letter-spacing: -0.05em;
-    text-shadow: 0 0 10px rgba(0,0,0,0.2);
 
     span {
       width: 140px;
@@ -57,6 +55,7 @@ header {
       text-shadow: 0 0 10px rgba(0,0,0,0.2);
 
       &:hover { background: rgba(255, 107, 100, 0.9); }
+      small { display: none; }
     }
   }
 
@@ -101,6 +100,13 @@ footer {
   font-size: 140%;
   text-align: center;
   padding: 0 0 20px;
+
+  span {
+    background: asset-url("loading.gif") no-repeat;
+    display: inline-block;
+    text-align: center;
+    padding: 0 0 0 35px;
+  }
 }
 
 #content {
@@ -126,9 +132,16 @@ footer {
 
 #content.home {
   .broadcast {
+    strong {
+      color: rgba(26, 19, 70, 1);
+    }
   }
 
   .listen {
+    strong {
+      color: rgba(59, 25, 23, 1);
+    }
+
     input {
       padding: 4px;
       border-radius: 3px;
@@ -138,16 +151,16 @@ footer {
 
   .or {
     font-size: 150%;
-    color: rgba(0,0,0,0.6);
+    color: rgba(0,0,0,0.3);
     text-align: center;
-    margin: 30px 0 10px;
-    border-top: 1px solid rgba(0,0,0,0.4);
+    margin: 36px 0 10px;
+    border-top: 1px solid rgba(0,0,0,0.2);
 
     span {
       position: relative;
       top: -0.7em;
       background: #fff;
-      padding: 8px;
+      padding: 12px;
     }
   }
 
