@@ -1,6 +1,6 @@
 class App < Sinatra::Base
   # Middleware
-  #use Rack::CanonicalHost, ENV['CANONICAL_HOST']
+  use Rack::CanonicalHost, ENV['CANONICAL_HOST']
 
   # Plugins
   register Sinatra::Partial
