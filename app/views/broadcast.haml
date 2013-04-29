@@ -7,9 +7,9 @@
   .authenticated-content
     .intro
       %p
-        %strong Yay! You are now broadcasting!
+        %strong Yay! You are now broadcasting!<br />
         Keep this tab open and everything will be alright.
-      %p Users can now listen to what you’re listening to by going to:
+      %p Users can listen to what you’re listening to by going to:
       %pre <a class="broadcast-url">http://#{ENV["CANONICAL_HOST"]}#{ENV["RACK_ENV"] != "production" ? ':'+ENV["PORT"] : ''}/listen/<span class="rdio-user" /></a>
     .hud.group
       %span.paused Paused
