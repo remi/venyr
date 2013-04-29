@@ -31,14 +31,14 @@ namespace :deploy do
   desc "Stop the app"
   task :stop, :roles => :app do
     ports.each do |port|
-      run "cd #{current_path} && bundle exec thin stop -C #{current_path}/config/thin.yml --port #{port} --environment production"
+      run "cd #{current_path} && bundle exec thin stop -C #{current_path}/config/thin.yml --force --port #{port} --environment production"
     end
   end
 
   desc "Restart the app"
   task :restart, :roles => :app do
     ports.each_with_index do |port, index|
-      run "cd #{current_path} && bundle exec thin restart -C #{current_path}/config/thin.yml --port #{port} --environment production"
+      run "cd #{current_path} && bundle exec thin restart -C #{current_path}/config/thin.yml --force --port #{port} --environment production"
     end
   end
 
