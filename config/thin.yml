@@ -1,0 +1,13 @@
+---
+pid: DEPLOY_SHARED_PATH/pids/thin.pid
+address: 0.0.0.0
+onebyone: true
+wait: 30
+timeout: 30
+log: DEPLOY_SHARED_PATH/log/thin.log
+max_conns: 1024
+require: []
+max_persistent_conns: 512
+servers: 1
+daemonize: true
+chdir: DEPLOY_CURRENT_PATH

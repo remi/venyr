@@ -28,4 +28,5 @@ end
 group :development do
   gem "shotgun"
   gem "thin"
+  gem "capistrano"
 end
