@@ -44,10 +44,11 @@ class Hud
     @trackIcon = @$e.find('.rdio-track-icon')
 
   updateTrack: (track) ->
-    @trackName.text(track.get('name'))
-    @trackArtist.text(track.get('artist'))
-    @trackAlbum.text(track.get('album'))
-    @trackIcon.attr('src', track.get('icon'))
+    if track
+      @trackName.text(track.get('name'))
+      @trackArtist.text(track.get('artist'))
+      @trackAlbum.text(track.get('album'))
+      @trackIcon.attr('src', track.get('icon'))
 
   updateState: (state) ->
     @$e.toggleClass('paused', state == 0)
@@ -82,7 +83,8 @@ class Broadcaster
 
   onPlayingTrackChange: (track) =>
     @hud.updateTrack(track)
-    @ws.send JSON.stringify({ event: 'playingTrackChange', data: { key: track.get('key') } })
+    console.log(track.attributes)
+    @ws.send JSON.stringify({ event: 'playingTrackChange', data: { track: track.attributes } })
 
   onPlayStateChange: (state) =>
     @hud.updateState(state)
@@ -112,7 +114,7 @@ class Listener
 
     switch message.event
       when "playStateChange" then @handlePlayStateChange(message.data.state)
-      when "playingTrackChange" then @handlePlayingTrackChange(message.data.key)
+      when "playingTrackChange" then @handlePlayingTrackChange(message.data.track)
       else console.log("Invalid event: #{message}")
 
   handlePlayStateChange: (state) ->
@@ -120,8 +122,10 @@ class Listener
     # TODO
     # if state == 0 then R.player.pause() else R.player.play()
 
-  handlePlayingTrackChange: (key) ->
-    console.log "Here, I would trigger R.player.play(source: #{key})"
+  handlePlayingTrackChange: (track) ->
+    console.log "Here, I would trigger R.player.play(source: #{track.key})"
+    console.log "Also, I would update the HUD with this:"
+    console.log track
     # TODO
     # R.player.play(source: key)
 

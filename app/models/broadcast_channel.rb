@@ -20,7 +20,7 @@ class BroadcastChannel < OpenStruct
 
     case parsed_message[:event]
       when "playingTrackChange"
-        self.current_track = parsed_message[:data][:key]
+        self.current_track = parsed_message[:data][:track]
       when "playStateChange"
         self.current_state = parsed_message[:data][:state]
     end

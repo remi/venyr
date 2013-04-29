@@ -55,9 +55,10 @@ class App < Sinatra::Base
         current_channel = ListenChannel.new(user: params[:user], socket: socket)
         $listen_channels << current_channel
 
-        broadcast_channel = BroadcastChannel.find_by_user(params[:user])
-        socket.send MultiJson.dump({ event: 'playingTrackChange', data: { key: broadcast_channel.current_track } })
-        socket.send MultiJson.dump({ event: 'playStateChange', data: { state: broadcast_channel.current_state } })
+        if broadcast_channel = BroadcastChannel.find_by_user(params[:user])
+          socket.send MultiJson.dump({ event: 'playingTrackChange', data: { track: broadcast_channel.current_track } })
+          socket.send MultiJson.dump({ event: 'playStateChange', data: { state: broadcast_channel.current_state } })
+        end
       end
 
       socket.onclose do
