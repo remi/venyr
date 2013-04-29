@@ -7,7 +7,7 @@ default_run_options[:pty] = true
 
 set :application, "venyr"
 set :repository, "git@github.com:remiprev/venyr.git"
-set :user, "ubuntu"
+set :user, "root"
 
 set :scm, :git
 set :branch, "master"
@@ -15,7 +15,7 @@ set :deploy_via, :remote_cache
 set :use_sudo, false
 
 set :default_environment, { 'PATH' => "$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH" }
-set :deploy_to, "/home/ubuntu/apps/venyr-production"
+set :deploy_to, "/root/apps/venyr-production"
 set :ports, %w(6000)
 
 role :app, "venyr-prod"
@@ -49,6 +49,11 @@ namespace :deploy do
     run "sed -i 's/DEPLOY_CURRENT_PATH/#{current_path.gsub(/\//,"\\/")}/g' #{current_path}/config/thin.yml"
   end
 
+  desc "Copy .rbenv-vars file"
+  task :rbenv_vars, :roles => :app do
+    run "cp #{shared_path}/.rbenv-vars #{current_path}/.rbenv-vars"
+  end
+
   desc "Remove git crumbles"
   task :git_clean, :roles => :app do
     run "rm -fr `find #{deploy_to}/releases -iname \".git*\"`"
@@ -57,5 +62,6 @@ namespace :deploy do
   after "deploy:create_symlink" do
     git_clean
     thin_config
+    rbenv_vars
   end
 end
