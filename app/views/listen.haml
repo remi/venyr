@@ -1,15 +1,13 @@
 - content_for :title do
-  — Listen Mode
+  — Listening to #{@user}
 
-#content.listen
+#content.listen{ data: { type: 'listen' } }
   .loading
     %span Loading…
+
   .authenticated-content
     .intro
       %p
-        %strong Yay! You are now listening to <span class="rdio-user-link"></span>’s broadcast.<br />
+        %strong Yay! You are now listening to <a href="http://www.rdio.com/people/#{@user}">#{@user}</a>’s broadcast.<br />
         %small Keep this tab open and everything will be alright.
     = partial :hud
-
-%script
-  window.VenyrType = 'listen'

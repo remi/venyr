@@ -16,6 +16,7 @@ class App < Sinatra::Base
     enable :static
     enable :partial_underscores
 
+    # Use globals, because why not?
     $broadcast_channels = []
     $listen_channels = []
   end
@@ -31,17 +32,25 @@ class App < Sinatra::Base
       current_channel = nil
 
       socket.onopen do
-        # TODO Use params[:token] to make sure this is the real params[:user]
-        current_channel = BroadcastChannel.new(user: params[:user], socket: socket)
-        $broadcast_channels << current_channel
+        begin
+          # TODO Use params[:token] to make sure this is the real params[:user]
+          current_channel = BroadcastChannel.new(user: params[:user], socket: socket)
+          $broadcast_channels << current_channel
+        rescue
+          socket.send(MultiJson.dump(event: 'fatalError'))
+        end
       end
 
-      socket.onclose { current_channel.close }
+      socket.onclose { current_channel && current_channel.close }
 
       socket.onmessage do |message|
         EM.next_tick do
-          current_channel.update_current_data(message)
-          current_channel.listen_channels.each { |channel| channel.socket.send(message) }
+          begin
+            current_channel.update_current_data(message)
+            current_channel.listen_channels.each { |channel| channel.socket.send(message) }
+          rescue
+            socket.send(MultiJson.dump(event: 'fatalError'))
+          end
         end
       end
     end
@@ -52,13 +61,17 @@ class App < Sinatra::Base
       current_channel = nil
 
       socket.onopen do
-        current_channel = ListenChannel.new(user: params[:user], socket: socket)
-        $listen_channels << current_channel
+        begin
+          current_channel = ListenChannel.new(user: params[:user], socket: socket)
+          $listen_channels << current_channel
 
-        if broadcast_channel = BroadcastChannel.find_by_user(params[:user])
-          broadcast_channel.increase_listeners!
-          socket.send MultiJson.dump(event: 'playingTrackChange', data: { track: broadcast_channel.current_track })
-          socket.send MultiJson.dump(event: 'playStateChange', data: { state: broadcast_channel.current_state })
+          if broadcast_channel = BroadcastChannel.find_by_user(params[:user])
+            broadcast_channel.increase_listeners!
+            socket.send MultiJson.dump(event: 'playingTrackChange', data: { track: broadcast_channel.current_track })
+            socket.send MultiJson.dump(event: 'playStateChange', data: { state: broadcast_channel.current_state })
+          end
+        rescue
+          socket.send(MultiJson.dump(event: 'fatalError'))
         end
       end
 
@@ -67,7 +80,7 @@ class App < Sinatra::Base
           broadcast_channel.decrease_listeners!
         end
 
-        current_channel.close
+        current_channel && current_channel.close
       end
     end
   end
@@ -82,7 +95,7 @@ class App < Sinatra::Base
   end
 
   get "/listen/:user" do
-    if BroadcastChannel.find_by_user(params[:user])
+    if BroadcastChannel.find_by_user(@user = params[:user])
       haml :listen
     else
       @message = :no_broadcasting

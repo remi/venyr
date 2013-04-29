@@ -2,18 +2,18 @@
 %html{ :lang => :en }
   %head
     %meta{ :charset => "utf-8" }
-    %link{ :type => "image/png", :href => image_path("favicon.png"), :rel => "shortcut icon" }
     %title Venyr #{yield_content(:title)}
     = stylesheet_tag('screen')
     = stylesheet_tag('http://fonts.googleapis.com/css?family=Signika+Negative:300,400,600,700')
-    %script{ :src => "https://rdio.com/api/api.js?client_id=#{ENV['RDIO_CLIENT_ID']}" }
+    = javascript_tag("https://rdio.com/api/api.js?client_id=#{ENV['RDIO_CLIENT_ID']}")
+    %link{ :type => "image/png", :href => image_path("favicon.png"), :rel => "shortcut icon" }
     = yield_content(:head)
   %body
     #wrap
       %header
         %h1
           %a{ href: '/' }
-            %span v<small>enyr</small>
+            %span V<small>enyr</small>
         %hr
       = yield
     %footer

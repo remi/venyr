@@ -41,6 +41,7 @@ header {
     font-family: 'Signika Negative', "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font-size: 820%;
     position: relative;
+    text-transform: lowercase;
     top: -105px;
     margin: 0 0 -105px;
 
@@ -185,16 +186,20 @@ footer {
     display: inline-block;
     border-radius: 3px;
     cursor: pointer;
+    background: rgba(255, 107, 100, 1);
 
-    &.broadcast {
-      background: rgba(96, 70, 255, 1);
-      &:hover { background: rgba(96, 70, 255, 0.9); }
-    }
+    &:hover { background: rgba(255, 107, 100, 0.9); }
 
-    &.listen {
-      background: rgba(255, 107, 100, 1);
-      &:hover { background: rgba(255, 107, 100, 0.9); }
+    &.button-large {
+      font-size: 120%;
+      padding: 8px 13px;
+      border-radius: 5px;
     }
+  }
+
+  .rdio-login {
+    padding: 15px 0 0;
+    text-align: center;
   }
 }
 

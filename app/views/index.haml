@@ -1,9 +1,10 @@
 - content_for :title do
   — Broadcast your Rdio playback to your friends
 
-#content.home
+#content.home{ data: { type: 'home' } }
   .loading
     %span Loading…
+
   .authenticated-content
     .broadcast
       %p
@@ -25,4 +26,6 @@
           %button.button.listen{ type: 'submit' } Listen!
 
   .unauthenticated-content
-    %p Welcome to Venyr. Please sign in to Rdio.
+    %p Welcome to Venyr, the best way to broadcast your Rdio playback with your friends.
+    %p.rdio-login
+      %a.button.button-large{ href: "javascript://" } Sign in with Rdio

@@ -1,9 +1,10 @@
 - content_for :title do
-  — Broadcast Mode
+  — Broadcast
 
-#content.broadcast
+#content.broadcast{ data: { type: 'broadcast' } }
   .loading
     %span Loading…
+
   .authenticated-content
     .intro
       %p
@@ -12,6 +13,3 @@
       %p Users can listen to what you’re listening to by going to:
       %pre <a class="broadcast-url">http://#{ENV["CANONICAL_HOST"]}#{ENV["RACK_ENV"] != "production" ? ':'+ENV["PORT"] : ''}/listen/<span class="rdio-user" /></a>
     = partial :hud
-
-%script
-  window.VenyrType = 'broadcast'
