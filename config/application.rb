@@ -103,10 +103,6 @@ class App < Sinatra::Base
     haml :index
   end
 
-  error 404 do
-    haml :'404'
-  end
-
   get "/listen/:user" do
     if BroadcastChannel.find_by_user(@user = params[:user])
       haml :listen
@@ -118,5 +114,10 @@ class App < Sinatra::Base
 
   get "/broadcast" do
     haml :broadcast
+  end
+
+  # Errors
+  not_found do
+    haml :'404'
   end
 end
