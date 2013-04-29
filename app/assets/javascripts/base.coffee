@@ -14,10 +14,15 @@ class Venyr.Base
 
   authenticate: ->
     R.authenticate (authenticated) =>
-      @home.initTemplate() if authenticated
+      if authenticated
+        returnTo = window.location.search.split("?return_to=")[1]
+        if returnTo.match(/^\//)
+          window.location = returnTo
+        else
+          @home.initTemplate()
 
   goHome: ->
-    window.location = "/"
+    window.location = "/?return_to=#{window.location.pathname}"
 
   handleFatalError: (data) ->
     $('#content').html('<div class="fatal-error">

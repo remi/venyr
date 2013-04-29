@@ -6,6 +6,7 @@ class Venyr.Home
   initTemplate: ->
     if R.authenticated()
       $('.loading').hide()
+      $('.unauthenticated-content').hide()
       $('.authenticated-content').show()
     else
       $('.loading').hide()
