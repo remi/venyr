@@ -1,3 +1,4 @@
+require 'capistrano_colors'
 require "bundler/capistrano"
 set :bundle_without, [:test]
 

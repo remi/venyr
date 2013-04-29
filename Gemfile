@@ -7,8 +7,8 @@ gem "thin"
 # Web
 gem "sinatra"
 gem "rack"
-gem "sinatra-partial", :require => "sinatra/partial"
-gem "sinatra-contrib", :require => false
+gem "sinatra-partial", require: "sinatra/partial"
+gem "sinatra-contrib", require: false
 gem "rack-canonical-host"
 gem "sinatra-websocket"
 gem "multi_json"
@@ -26,7 +26,7 @@ group :assets do
 end
 
 group :development do
-  gem "shotgun"
-  gem "thin"
-  gem "capistrano"
+  gem "thin", require: false
+  gem "capistrano", require: false
+  gem "capistrano_colors", require: false
 end
