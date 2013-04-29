@@ -13,7 +13,7 @@ class Venyr.Listener
     $('.authenticated-content').show()
 
   socketPath: ->
-    window.location.pathname + '/live'
+    "/live/listen/#{$('#content').data('user')}"
 
   initSocket: ->
     @ws = new WebSocket('ws://' + window.location.host + @socketPath())

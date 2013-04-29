@@ -8,7 +8,7 @@
   .authenticated-content
     .intro
       %p
-        %strong Yay! You are now broadcasting to <span class="listeners-count">0</span> users.<br />
+        %strong Yay! You are now broadcasting to <span class="listeners-count">0 users</span>.<br />
         %small Keep this tab open and everything will be alright.
       %p Users can listen to what you’re listening to by going to:
       %pre <a class="broadcast-url">http://#{request.host}#{request.port != 80 ? ":#{request.port}" : '' }/listen/<span class="rdio-user" /></a>

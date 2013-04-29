@@ -24,7 +24,7 @@ class Venyr.Broadcaster
     $(window).on 'beforeunload', -> 'This message is just there so you won’t accidentally close/reload the Venyr tab while you’re broadcasting. But leave if you must!'
 
   socketPath: ->
-    window.location.pathname + '/' + R.currentUser.get('vanityName') + '/live?token=' + R.accessToken()
+    "/live/broadcast/#{R.currentUser.get('vanityName')}?token=#{R.accessToken()}"
 
   initSocket: ->
     @ws = new WebSocket('ws://' + window.location.host + @socketPath())
@@ -41,7 +41,7 @@ class Venyr.Broadcaster
       else console.log("Invalid event: #{message}")
 
   handleListenersCountChange: (count) ->
-    $('.listeners-count').text(count)
+    $('.listeners-count').text("#{count} #{if count == 1 then 'user' else 'users' }")
 
   onPlayingTrackChange: (track) =>
     if track

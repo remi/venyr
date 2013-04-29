@@ -1,7 +1,7 @@
 - content_for :title do
   — Listening to #{@user}
 
-#content.listen{ data: { type: 'listen' } }
+#content.listen{ data: { type: 'listen', user: @user } }
   .loading
     %span Loading…
 

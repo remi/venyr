@@ -38,7 +38,7 @@ class App < Sinatra::Base
   end
 
   # Sockets
-  get "/broadcast/:user/live" do
+  get "/live/broadcast/:user" do
     request.websocket do |socket|
       current_channel = nil
 
@@ -68,7 +68,7 @@ class App < Sinatra::Base
     end
   end
 
-  get "/listen/:user/live" do
+  get "/live/listen/:user" do
     request.websocket do |socket|
       current_channel = nil
 
