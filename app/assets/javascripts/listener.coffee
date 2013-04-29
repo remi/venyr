@@ -33,13 +33,13 @@ class Venyr.Listener
     console.log "Here, I would change the player state to #{state}"
     @hud.updateState(state)
     # TODO
-    # if state == 0 then R.player.pause() else R.player.play()
+    if state == 0 then R.player.pause() else R.player.play()
 
   handlePlayingTrackChange: (track) ->
     if track
       console.log "Here, I would trigger R.player.play(source: #{track.key})"
       @hud.updateTrack(track)
       # TODO
-      # R.player.play(source: key) # How does play work actually?
+      R.player.play(source: key) # How does play work actually?
     else
       @hud.clear()
