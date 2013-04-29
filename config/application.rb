@@ -56,13 +56,17 @@ class App < Sinatra::Base
         $listen_channels << current_channel
 
         if broadcast_channel = BroadcastChannel.find_by_user(params[:user])
-          socket.send MultiJson.dump({ event: 'playingTrackChange', data: { track: broadcast_channel.current_track } })
-          socket.send MultiJson.dump({ event: 'playStateChange', data: { state: broadcast_channel.current_state } })
+          broadcast_channel.increase_listeners!
+          socket.send MultiJson.dump(event: 'playingTrackChange', data: { track: broadcast_channel.current_track })
+          socket.send MultiJson.dump(event: 'playStateChange', data: { state: broadcast_channel.current_state })
         end
       end
 
       socket.onclose do
-        # TODO Notify all current_channel.listen_channels with a custom event?
+        if broadcast_channel = BroadcastChannel.find_by_user(current_channel.user)
+          broadcast_channel.decrease_listeners!
+        end
+
         current_channel.close
       end
     end

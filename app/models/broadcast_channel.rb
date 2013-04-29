@@ -1,14 +1,15 @@
 class BroadcastChannel < OpenStruct
+  def initialize(*args)
+    super(*args)
+    @listeners_count = 0
+  end
+
   def listen_channels
     $listen_channels.select { |c| c.user == self.user }
   end
 
   def self.find_by_user(user)
     $broadcast_channels.select { |c| c.user == user }.first
-  end
-
-  def self.find_by_ws(ws)
-    $broadcast_channels.select { |c| c.ws == ws }.first
   end
 
   def close
@@ -24,5 +25,20 @@ class BroadcastChannel < OpenStruct
       when "playStateChange"
         self.current_state = parsed_message[:data][:state]
     end
+  end
+
+  def increase_listeners!
+    @listeners_count += 1
+    update_listeners
+  end
+
+  def decrease_listeners!
+    @listeners_count -= 1
+    update_listeners
+  end
+
+  private
+  def update_listeners
+    self.socket.send MultiJson.dump(event: 'listenersCountChange', data: { count: @listeners_count })
   end
 end

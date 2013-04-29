@@ -80,10 +80,20 @@ class Broadcaster
     @ws = new WebSocket('ws://' + window.location.host + @socketPath())
     @ws.onopen = => @initEvents()
     @ws.onclose = -> console.log('The WebSocket has closed')
+    @ws.onmessage = (message) => @handleMessage(message)
+
+  handleMessage: (message) ->
+    message = JSON.parse(message.data)
+
+    switch message.event
+      when "listenersCountChange" then @handleListenersCountChange(message.data.count)
+      else console.log("Invalid event: #{message}")
+
+  handleListenersCountChange: (count) ->
+    $('.listeners-count').text(count)
 
   onPlayingTrackChange: (track) =>
     @hud.updateTrack(track)
-    console.log(track.attributes)
     @ws.send JSON.stringify({ event: 'playingTrackChange', data: { track: track.attributes } })
 
   onPlayStateChange: (state) =>
