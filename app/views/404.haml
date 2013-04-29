@@ -1,1 +1,11 @@
-%p Oops, this page doesn’t exist.
+#content.error
+  %h2 That’s a shame.
+  - if @message == :no_broadcasting
+    %p
+      %img{ src: 'http://i.imgur.com/08yzxtK.gif' }
+    %p This user isn&rsquo;t broadcasting at the moment.
+    %p Please poke him/her to start broadcasting and reload this page when you feel comfortable.
+  - else
+    %p
+      %img{ src: 'http://i.imgur.com/O6JnKli.png' }
+    %p Oops, this page doesn’t exist.

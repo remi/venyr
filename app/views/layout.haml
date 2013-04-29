@@ -2,6 +2,7 @@
 %html{ :lang => :en }
   %head
     %meta{ :charset => "utf-8" }
+    %link{ :type => "image/png", :href => image_path("favicon.png"), :rel => "shortcut icon" }
     %title Venyr #{yield_content(:title)}
     = stylesheet_tag('screen')
     = stylesheet_tag('http://fonts.googleapis.com/css?family=Signika+Negative:300,400,600,700')
@@ -11,8 +12,11 @@
     #wrap
       %header
         %h1
-          %a{ href: '/' } venyr
+          %a{ href: '/' }
+            %span v
       = yield
+    %footer
+      %p Made by <a href="http://exomel.com">Rémi Prévost</a> while listening to <a href="http://www.rdio.com/label/Kitsun%C3%A9/">Kistuné</a>
     :plain
       <script>document.write('<script src="//cdnjs.cloudflare.com/ajax/libs/' +
       ('__proto__' in {} && !/firefox\/3/i.test(navigator.userAgent) ?

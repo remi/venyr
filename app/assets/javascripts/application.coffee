@@ -32,7 +32,7 @@ class Home
 
   initEvents: ->
     $('form').bind 'submit', (e) ->
-      e.target.setAttribute('action', e.target.getAttribute('action').replace(/%user/, R.currentUser.get('vanityName')))
+      e.target.setAttribute('action', e.target.getAttribute('action').replace(/%user/, $('#listen-user').val()))
 
 class Hud
   constructor: (opts = {}) ->

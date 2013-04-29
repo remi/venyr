@@ -77,8 +77,12 @@ class App < Sinatra::Base
   end
 
   get "/listen/:user" do
-    halt 404 unless BroadcastChannel.find_by_user(params[:user])
-    haml :listen
+    if BroadcastChannel.find_by_user(params[:user])
+      haml :listen
+    else
+      @message = :no_broadcasting
+      halt 404
+    end
   end
 
   get "/broadcast" do
