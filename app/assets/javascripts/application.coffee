@@ -70,6 +70,7 @@ class Broadcaster
 
     @onPlayingTrackChange(R.player.playingTrack())
     @onPlayStateChange(R.player.playState())
+    $(window).on 'beforeunload', -> 'This message is just there so you won’t accidentally close the Venyr tab while you’re broadcasting. But leave if you must!'
 
   socketPath: ->
     window.location.pathname + '/' + R.currentUser.get('vanityName') + '/live?token=' + R.accessToken()
