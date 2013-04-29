@@ -1,11 +1,15 @@
+- content_for :title do
+  — Error
+
 #content.error
-  %h2 That’s a shame.
   - if @message == :no_broadcasting
+    %h2 That’s a shame.
     %p
       %img{ src: 'http://i.imgur.com/08yzxtK.gif' }
     %p This user isn&rsquo;t broadcasting at the moment.
     %p Please poke him/her to start broadcasting and reload this page when you feel comfortable.
   - else
+    %h2 This is the worst.
     %p
-      %img{ src: 'http://i.imgur.com/O6JnKli.png' }
+      %img{ src: 'http://i.imgur.com/VCgkVsV.jpg' }
     %p Oops, this page doesn’t exist.

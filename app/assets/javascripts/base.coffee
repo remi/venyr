@@ -20,4 +20,7 @@ class Venyr.Base
     window.location = "/"
 
   handleFatalError: (data) ->
-    $('#content').html('<div class="fatal-error">A fatal error occurred. The application will not work properly. Please contact <a href="mailto:remi@exomel.com">remi@exomel.com</a> if this persists.</div>')
+    $('#content').html('<div class="fatal-error">
+      <p><img src="http://i.imgur.com/O6JnKli.png" alt="" /></p>
+      <p>A fatal error occurred. The application will not work properly. Please contact <a href="mailto:remi@exomel.com">remi@exomel.com</a> if this persists.</p>
+    </div>')
