@@ -40,6 +40,6 @@ class Venyr.Listener
       console.log "Here, I would trigger R.player.play(source: #{track.key})"
       @hud.updateTrack(track)
       # TODO
-      R.player.play(source: key) # How does play work actually?
+      R.player.play(source: track.key) # How does play work actually?
     else
       @hud.clear()
