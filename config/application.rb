@@ -1,7 +1,6 @@
 class App < Sinatra::Base
   # Middleware
   use Rack::CanonicalHost, ENV['CANONICAL_HOST']
-  use Rack::Logger
 
   # Plugins
   register Sinatra::Partial
@@ -24,7 +23,19 @@ class App < Sinatra::Base
   # Helpers
   helpers Sprockets::Helpers
   helpers Sinatra::ContentFor
-  helpers LoggerHelper
+  helpers do
+    def logger
+      @logger ||= Logger.new(request.env['rack.errors']).tap do |logger|
+        logger.formatter = proc do |severity, datetime, progname, msg|
+           "-- Venyr: #{msg}\n"
+        end
+      end
+    end
+
+    def socket_error(socket, message=nil)
+      socket.send(MultiJson.dump(event: 'fatalError', data: { message: message }))
+    end
+  end
 
   # Sockets
   get "/broadcast/:user/live" do
@@ -33,11 +44,11 @@ class App < Sinatra::Base
 
       socket.onopen do
         begin
+          logger.info "Broadcast initiated for #{params[:user]}"
           # TODO Use params[:token] to make sure this is the real params[:user]
           current_channel = BroadcastChannel.new(user: params[:user], socket: socket)
           $broadcast_channels << current_channel
         rescue
-          socket.send(MultiJson.dump(event: 'fatalError'))
         end
       end
 
@@ -46,10 +57,11 @@ class App < Sinatra::Base
       socket.onmessage do |message|
         EM.next_tick do
           begin
+            logger.info "Broadcast message (#{current_channel.user}) received: #{message}"
             current_channel.update_current_data(message)
             current_channel.listen_channels.each { |channel| channel.socket.send(message) }
           rescue
-            socket.send(MultiJson.dump(event: 'fatalError'))
+            socket_error(socket)
           end
         end
       end
@@ -62,6 +74,7 @@ class App < Sinatra::Base
 
       socket.onopen do
         begin
+          logger.info "New listener for #{params[:user]}"
           current_channel = ListenChannel.new(user: params[:user], socket: socket)
           $listen_channels << current_channel
 
@@ -71,7 +84,7 @@ class App < Sinatra::Base
             socket.send MultiJson.dump(event: 'playStateChange', data: { state: broadcast_channel.current_state })
           end
         rescue
-          socket.send(MultiJson.dump(event: 'fatalError'))
+          socket_error(socket)
         end
       end
 
