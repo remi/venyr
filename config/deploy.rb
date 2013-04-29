@@ -37,9 +37,11 @@ namespace :deploy do
 
   desc "Restart the app"
   task :restart, :roles => :app do
-    ports.each_with_index do |port, index|
-      run "cd #{current_path} && bundle exec thin restart -C #{current_path}/config/thin.yml --port #{port} --environment production"
-    end
+    stop
+    start
+    #ports.each_with_index do |port, index|
+      #run "cd #{current_path} && bundle exec thin restart -C #{current_path}/config/thin.yml --port #{port} --environment production"
+    #end
   end
 
   desc "Replace paths in thin.yml"
