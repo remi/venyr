@@ -84,14 +84,12 @@ DEPENDENCIES
   coffee-script
   haml
   multi_json
-  rack
   rack-canonical-host
   sass
   sinatra
   sinatra-contrib
   sinatra-partial
   sinatra-websocket
-  sprockets
   sprockets-helpers
   sprockets-sass
   thin
