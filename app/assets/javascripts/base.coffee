@@ -3,6 +3,7 @@ window.Venyr = {}
 class Venyr.Base
   constructor: (opts = {}) ->
     @opts = opts
+    @fatalError = false
     R.ready(@init)
 
   init: =>
@@ -25,6 +26,7 @@ class Venyr.Base
     window.location = "/?return_to=#{window.location.pathname}"
 
   handleFatalError: (data) ->
+    @fatalError = true
     $('#content').html('<div class="fatal-error">
       <p><img src="http://i.imgur.com/O6JnKli.png" alt="" /></p>
       <p>A fatal error occurred. The application will not work properly. Please contact <a href="mailto:remi@exomel.com">remi@exomel.com</a> if this persists.</p>

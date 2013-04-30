@@ -9,6 +9,7 @@ gem 'sinatra'
 gem 'sinatra-partial', require: 'sinatra/partial'
 gem 'sinatra-contrib', require: false
 gem 'rack-canonical-host'
+gem 'faraday'
 
 # Sockets
 gem 'sinatra-websocket'

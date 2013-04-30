@@ -18,6 +18,19 @@ class App < Sinatra::Base
     # Use globals, because why not?
     $broadcast_channels = []
     $listen_channels = []
+
+    # Rdio API
+    class ParseJson < Faraday::Response::Middleware
+      def on_complete(env)
+        env[:body] = MultiJson.load(env[:body]) rescue nil
+      end
+    end
+
+    $api = Faraday.new(url: 'https://www.rdio.com', ssl: { verify: false }) do |connection|
+      connection.use ParseJson
+      connection.request :url_encoded
+      connection.adapter :net_http
+    end
   end
 
   # Helpers
@@ -35,6 +48,20 @@ class App < Sinatra::Base
     def socket_error(socket, message=nil)
       socket.send(MultiJson.dump(event: 'fatalError', data: { message: message }))
     end
+
+    def current_user
+      @_current_user ||= begin
+        logger.info '!!!!!!!!!!! Fetching Rdio user'
+        response = $api.post('/api/1') do |req|
+          req.body = { method: 'currentUser', extras: 'username' }
+          req.headers['Authorization'] = "Bearer #{params[:token]}"
+        end
+
+        OpenStruct.new(response.body["result"])
+      rescue
+        nil
+      end
+    end
   end
 
   # Sockets
@@ -45,9 +72,13 @@ class App < Sinatra::Base
       socket.onopen do
         begin
           logger.info "Broadcast initiated for #{params[:user]}"
-          # TODO Use params[:token] to make sure this is the real params[:user]
-          current_channel = BroadcastChannel.new(user: params[:user], socket: socket)
-          $broadcast_channels << current_channel
+
+          if current_user && current_user.username == params[:user]
+            current_channel = BroadcastChannel.new(user: params[:user], socket: socket)
+            $broadcast_channels << current_channel
+          else
+            logger.info "Broadcast rejected for #{params[:user]}"
+          end
         rescue
         end
       end

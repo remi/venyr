@@ -19,6 +19,7 @@ class Venyr.Listener
     @ws = new WebSocket('ws://' + window.location.host + @socketPath())
     @ws.onopen = => @initEvents() unless opts.reconnect
     @ws.onclose = =>
+      return false if window.Venyr.App.fatalError == true
       console.log('The WebSocket has closed, attempting to reconnect in 15 seconds…')
       @reconnectSocket(15000)
     @ws.onmessage = (message) => @handleMessage(message)

@@ -37,4 +37,3 @@ $ open http://venyr.local:5200
 ## Todo
 
 * Fix playback bugs
-* When starting a broadcast, make sure we test on the server that the `accessToken` matches the provided username.

@@ -29,6 +29,7 @@ class Venyr.Broadcaster
       @initEvents() unless opts.reconnect
       @initState()
     @ws.onclose = =>
+      return false if window.Venyr.App.fatalError == true
       console.log('The WebSocket has closed, attempting to reconnect in 10 seconds…')
       @reconnectSocket(10000)
     @ws.onmessage = (message) => @handleMessage(message)
