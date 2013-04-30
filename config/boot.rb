@@ -13,13 +13,8 @@ Dir[File.expand_path('../../app/models/**/*.rb', __FILE__)].each do |file|
   require "#{dirname}/#{file_basename}"
 end
 
-# Require helpers
-Dir[File.expand_path('../../app/helpers/**/*.rb', __FILE__)].each do |file|
-  dirname = File.dirname(file)
-  file_basename = File.basename(file, File.extname(file))
-  require "#{dirname}/#{file_basename}"
-end
-
 # Application setup
-ENV['CANONICAL_HOST'] ||= ENV['RACK_ENV'] == 'development' ? '0.0.0.0' : 'myapplication.com'
+ENV['CANONICAL_HOST'] || raise(StandardError.new "You must provide a “CANONICAL_HOST” environment variable.")
+ENV['RDIO_CLIENT_ID'] || raise(StandardError.new "You must provide a “RDIO_CLIENT_ID” environment variable.")
+ENV['FOO'] || raise(StandardError.new "You must provide a “FOO” environment variable.")
 require File.expand_path('../application',  __FILE__)
