@@ -14,6 +14,7 @@ set :branch, "master"
 set :deploy_via, :remote_cache
 set :use_sudo, false
 
+set :normalize_asset_timestamps, false
 set :default_environment, { 'PATH' => "$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH" }
 set :deploy_to, "/root/apps/venyr-production"
 set :ports, %w(6000)
