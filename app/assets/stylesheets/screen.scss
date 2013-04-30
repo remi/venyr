@@ -163,6 +163,12 @@ footer {
     }
   }
 
+  .active {
+    li {
+      margin: 0 0 2px;
+    }
+  }
+
   .or {
     font-size: 150%;
     color: rgba(0,0,0,0.3);

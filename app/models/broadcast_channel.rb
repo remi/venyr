@@ -1,8 +1,14 @@
 class BroadcastChannel < OpenStruct
+  attr_reader :listeners_count
+
   def initialize(*args)
     super(*args)
     @listeners_count = listen_channels.count
     update_listeners
+  end
+
+  def self.popular
+    $broadcast_channels.sort_by(&:listeners_count).select { |c| c.listeners_count > 0 }
   end
 
   def pong!
