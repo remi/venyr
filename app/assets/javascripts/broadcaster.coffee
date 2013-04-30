@@ -31,6 +31,9 @@ class Venyr.Broadcaster
     @ws.onopen = => @initEvents()
     @ws.onclose = -> console.log('The WebSocket has closed')
     @ws.onmessage = (message) => @handleMessage(message)
+    setInterval(=>
+      @ws.send(JSON.stringify({ event: 'keepAlive', data: {} }))
+    , Venyr.App.opts.keepAliveInterval)
 
   handleMessage: (message) ->
     message = JSON.parse(message.data)

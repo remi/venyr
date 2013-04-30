@@ -88,6 +88,16 @@ class App < Sinatra::Base
         end
       end
 
+      socket.onmessage do |message|
+        EM.next_tick do
+          begin
+            logger.info "Listener message (broadcaster: #{current_channel.user}) received: #{message}"
+          rescue
+            socket_error(socket)
+          end
+        end
+      end
+
       socket.onclose do
         if broadcast_channel = BroadcastChannel.find_by_user(current_channel.user)
           broadcast_channel.decrease_listeners!
