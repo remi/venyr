@@ -21,9 +21,7 @@ class BroadcastChannel < OpenStruct
     $broadcast_channels.delete(self)
   end
 
-  def update_current_data(message)
-    parsed_message = MultiJson.load(message, :symbolize_keys => true)
-
+  def update_current_data(parsed_message)
     case parsed_message[:event]
       when "playingTrackChange"
         self.current_track = parsed_message[:data][:track]

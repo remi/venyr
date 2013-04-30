@@ -58,9 +58,14 @@ class App < Sinatra::Base
         EM.next_tick do
           begin
             logger.info "Broadcast message (#{current_channel.user}) received: #{message}"
-            current_channel.update_current_data(message)
-            current_channel.listen_channels.each { |channel| channel.socket.send(message) }
-            current_channel.pong!
+            parsed_message = MultiJson.load(message, :symbolize_keys => true)
+            current_channel.update_current_data(parsed_message)
+
+            if parsed_message[:event] != "ping"
+              current_channel.listen_channels.each { |channel| channel.socket.send(message) }
+            else
+              current_channel.pong!
+            end
           rescue
             socket_error(socket)
           end
