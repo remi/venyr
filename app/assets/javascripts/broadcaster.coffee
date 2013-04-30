@@ -1,7 +1,7 @@
 class Venyr.Broadcaster
   constructor: ->
     @initTemplate()
-    @initSocket()
+    @initSocket(reconnect: false)
 
   initTemplate: ->
     $('.rdio-user').text(R.currentUser.get('vanityName'))
@@ -26,14 +26,14 @@ class Venyr.Broadcaster
   socketPath: ->
     "/live/broadcast/#{R.currentUser.get('vanityName')}?token=#{R.accessToken()}"
 
-  initSocket: ->
+  initSocket: (opts) ->
     @ws = new WebSocket('ws://' + window.location.host + @socketPath())
-    @ws.onopen = => @initEvents()
+    @ws.onopen = => @initEvents() unless opts.reconnect
     @ws.onclose = =>
       console.log('The WebSocket has closed, attempting to reconnect in 10 seconds…')
       setTimeout(=>
         console.log('Trying to reconnect…')
-        @initSocket()
+        @initSocket(reconnect: true)
       , 10000)
     @ws.onmessage = (message) => @handleMessage(message)
     setInterval(=>
