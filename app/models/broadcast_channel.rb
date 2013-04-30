@@ -5,6 +5,10 @@ class BroadcastChannel < OpenStruct
     update_listeners
   end
 
+  def pong!
+    self.socket.send MultiJson.dump(event: 'pong', data: {})
+  end
+
   def listen_channels
     $listen_channels.select { |c| c.user == self.user }
   end

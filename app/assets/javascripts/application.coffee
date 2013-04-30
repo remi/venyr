@@ -4,4 +4,4 @@
 //= require 'listener'
 //= require 'hud'
 
-$(document).ready -> Venyr.App = new Venyr.Base(type: $('#content').data('type'), keepAliveInterval: 10000)
+$(document).ready -> Venyr.App = new Venyr.Base(type: $('#content').data('type'), pingInterval: 10000)

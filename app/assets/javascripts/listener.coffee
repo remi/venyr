@@ -20,8 +20,8 @@ class Venyr.Listener
     @ws.onclose = -> console.log('The WebSocket has closed')
     @ws.onmessage = (message) => @handleMessage(message)
     setInterval(=>
-      @ws.send(JSON.stringify({ event: 'keepAlive', data: {} }))
-    , Venyr.App.opts.keepAliveInterval)
+      @ws.send(JSON.stringify({ event: 'ping', data: {} }))
+    , Venyr.App.opts.pingInterval)
 
   handleMessage: (message) ->
     message = JSON.parse(message.data)
@@ -30,17 +30,16 @@ class Venyr.Listener
       when "fatalError" then @ws.close(); R.player.pause(); window.Venyr.App.handleFatalError(message.data)
       when "playStateChange" then @handlePlayStateChange(message.data.state)
       when "playingTrackChange" then @handlePlayingTrackChange(message.data.track)
+      when "pong" then true
       else console.log("Invalid event: #{message}")
 
   handlePlayStateChange: (state) ->
-    console.log "Here, I would change the player state to #{state}"
     @hud.updateState(state)
     if state == 0 then R.player.pause() else R.player.play()
 
   handlePlayingTrackChange: (track) ->
     if track
-      console.log "Here, I would trigger R.player.play(source: #{track.key})"
       @hud.updateTrack(track)
-      R.player.play(source: track.key) # How does play work actually?
+      R.player.play(source: track.key)
     else
       @hud.clear()

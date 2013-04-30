@@ -32,8 +32,8 @@ class Venyr.Broadcaster
     @ws.onclose = -> console.log('The WebSocket has closed')
     @ws.onmessage = (message) => @handleMessage(message)
     setInterval(=>
-      @ws.send(JSON.stringify({ event: 'keepAlive', data: {} }))
-    , Venyr.App.opts.keepAliveInterval)
+      @ws.send(JSON.stringify({ event: 'ping', data: {} }))
+    , Venyr.App.opts.pingInterval)
 
   handleMessage: (message) ->
     message = JSON.parse(message.data)
@@ -41,6 +41,7 @@ class Venyr.Broadcaster
     switch message.event
       when "fatalError" then @ws.close(); window.Venyr.App.handleFatalError(message.data)
       when "listenersCountChange" then @handleListenersCountChange(message.data.count)
+      when "pong" then true
       else console.log("Invalid event: #{message}")
 
   handleListenersCountChange: (count) ->
