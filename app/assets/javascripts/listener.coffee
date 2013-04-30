@@ -17,7 +17,12 @@ class Venyr.Listener
 
   initSocket: ->
     @ws = new WebSocket('ws://' + window.location.host + @socketPath())
-    @ws.onclose = -> console.log('The WebSocket has closed')
+    @ws.onclose = =>
+      console.log('The WebSocket has closed, attempting to reconnect in 15 seconds…')
+      setTimeout(=>
+        console.log('Trying to reconnect…')
+        @initSocket()
+      , 15000)
     @ws.onmessage = (message) => @handleMessage(message)
     setInterval(=>
       @ws.send(JSON.stringify({ event: 'ping', data: {} }))

@@ -29,7 +29,12 @@ class Venyr.Broadcaster
   initSocket: ->
     @ws = new WebSocket('ws://' + window.location.host + @socketPath())
     @ws.onopen = => @initEvents()
-    @ws.onclose = -> console.log('The WebSocket has closed')
+    @ws.onclose = =>
+      console.log('The WebSocket has closed, attempting to reconnect in 10 seconds…')
+      setTimeout(=>
+        console.log('Trying to reconnect…')
+        @initSocket()
+      , 10000)
     @ws.onmessage = (message) => @handleMessage(message)
     setInterval(=>
       @ws.send(JSON.stringify({ event: 'ping', data: {} }))
