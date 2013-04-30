@@ -27,7 +27,7 @@ class App < Sinatra::Base
     def logger
       @logger ||= Logger.new(request.env['rack.errors']).tap do |logger|
         logger.formatter = proc do |severity, datetime, progname, msg|
-           "-- Venyr: #{msg}\n"
+           "-- #{datetime} Venyr: #{msg}\n"
         end
       end
     end

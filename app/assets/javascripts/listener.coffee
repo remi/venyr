@@ -1,10 +1,10 @@
 class Venyr.Listener
   constructor: ->
     @initTemplate()
-    @initSocket()
-    @initEvents()
+    @initSocket(reconnect: false)
 
   initEvents: ->
+    @initPing()
     $(window).on 'beforeunload', -> 'This message is just there so you won’t accidentally close/reload the Venyr tab while you’re listening. But leave if you must!'
 
   initTemplate: ->
@@ -15,15 +15,21 @@ class Venyr.Listener
   socketPath: ->
     "/live/listen/#{$('#content').data('user')}"
 
-  initSocket: ->
+  initSocket: (opts) ->
     @ws = new WebSocket('ws://' + window.location.host + @socketPath())
+    @ws.onopen = => @initEvents() unless opts.reconnect
     @ws.onclose = =>
       console.log('The WebSocket has closed, attempting to reconnect in 15 seconds…')
-      setTimeout(=>
-        console.log('Trying to reconnect…')
-        @initSocket()
-      , 15000)
+      @reconnectSocket(15000)
     @ws.onmessage = (message) => @handleMessage(message)
+
+  reconnectSocket: (delay) ->
+    setTimeout(=>
+      console.log('Trying to reconnect…')
+      @initSocket(reconnect: true)
+    , delay)
+
+  initPing: ->
     setInterval(=>
       @ws.send(JSON.stringify({ event: 'ping', data: {} }))
     , Venyr.App.opts.pingInterval)

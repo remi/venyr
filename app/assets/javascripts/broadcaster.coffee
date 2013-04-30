@@ -13,29 +13,33 @@ class Venyr.Broadcaster
   initEvents: ->
     R.player.on 'change:playState', @onPlayStateChange
     R.player.on 'change:playingTrack', @onPlayingTrackChange
-
-    @onPlayingTrackChange(R.player.playingTrack())
-
-    if R.player.playingTrack()
-      @onPlayStateChange(R.player.playState())
-    else
-      @hud.clear()
-
+    @initPing()
     $(window).on 'beforeunload', -> 'This message is just there so you won’t accidentally close/reload the Venyr tab while you’re broadcasting. But leave if you must!'
+
+  initState: ->
+    @onPlayingTrackChange(R.player.playingTrack())
+    if R.player.playingTrack() then @onPlayStateChange(R.player.playState()) else @hud.clear()
 
   socketPath: ->
     "/live/broadcast/#{R.currentUser.get('vanityName')}?token=#{R.accessToken()}"
 
   initSocket: (opts) ->
     @ws = new WebSocket('ws://' + window.location.host + @socketPath())
-    @ws.onopen = => @initEvents() unless opts.reconnect
+    @ws.onopen = =>
+      @initEvents() unless opts.reconnect
+      @initState()
     @ws.onclose = =>
       console.log('The WebSocket has closed, attempting to reconnect in 10 seconds…')
-      setTimeout(=>
-        console.log('Trying to reconnect…')
-        @initSocket(reconnect: true)
-      , 10000)
+      @reconnectSocket(10000)
     @ws.onmessage = (message) => @handleMessage(message)
+
+  reconnectSocket: (delay) ->
+    setTimeout(=>
+      console.log('Trying to reconnect…')
+      @initSocket(reconnect: true)
+    , delay)
+
+  initPing: () ->
     setInterval(=>
       @ws.send(JSON.stringify({ event: 'ping', data: {} }))
     , Venyr.App.opts.pingInterval)
