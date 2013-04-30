@@ -42,6 +42,8 @@ GEM
     rack-test (0.6.2)
       rack (>= 1.0)
     sass (3.2.8)
+    shotgun (0.9)
+      rack (>= 1.0)
     sinatra (1.4.2)
       rack (~> 1.5, >= 1.5.2)
       rack-protection (~> 1.4)
@@ -87,6 +89,7 @@ DEPENDENCIES
   multi_json
   rack-canonical-host
   sass
+  shotgun
   sinatra
   sinatra-contrib
   sinatra-partial

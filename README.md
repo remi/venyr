@@ -20,10 +20,10 @@ Install the dependencies and start the app
 ```shell
 $ bundle install
 $ export RDIO_CLIENT_ID=…
-$ export CANONICAL_HOST=…
+$ export CANONICAL_HOST=venyr.local
 $ bundle exec thin start --port 5200
 13:48:04 web.1  | >> Using rack adapter
-13:48:04 web.1  | >> Thin web server (v1.5.0 codename Knife)
+13:48:04 web.1  | >> Thin web server (v1.5.1 codename Straight Razor)
 13:48:04 web.1  | >> Maximum connections set to 1024
 13:48:04 web.1  | >> Listening on 0.0.0.0:5200, CTRL+C to stop
 ```
@@ -31,10 +31,10 @@ $ bundle exec thin start --port 5200
 Open the app in a browser
 
 ```shell
-$ open http://0.0.0.0:5200
+$ open http://venyr.local:5200
 ```
 
 ## Todo
 
-* There’s no login process for the moment. Gotta get invited to the JS API beta program first. I’m currently using [rdio-display](http://rdio-display.herokuapp.com) client ID :smile:
+* Fix playback bugs
 * When starting a broadcast, make sure we test on the server that the `accessToken` matches the provided username.
