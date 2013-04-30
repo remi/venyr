@@ -7,7 +7,7 @@ timeout: 30
 log: DEPLOY_SHARED_PATH/log/thin.log
 max_conns: 1024
 require: []
-max_persistent_conns: 512
+max_persistent_conns: 1024
 servers: 1
 daemonize: true
 chdir: DEPLOY_CURRENT_PATH
