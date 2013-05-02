@@ -35,7 +35,7 @@
           - BroadcastChannel.popular.each do |channel|
             %li
               %a{ href: "/listen/#{channel.user}" }= channel.user
-              %small (#{channel.listeners_count} listeners)
+              %small (#{channel.listeners_count} listener#{'s' if channel.listeners_count > 1})
 
   .unauthenticated-content
     %p Welcome to Venyr, the best way to broadcast your Rdio playback with your friends.
