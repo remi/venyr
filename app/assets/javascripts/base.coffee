@@ -17,7 +17,7 @@ class Venyr.Base
     R.authenticate (authenticated) =>
       if authenticated
         returnTo = window.location.search.split("?return_to=")[1]
-        if returnTo.match(/^\//)
+        if returnTo?.match(/^\//)
           window.location = returnTo
         else
           @home.initTemplate()
