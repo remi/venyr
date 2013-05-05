@@ -1,4 +1,4 @@
-# Venyr [![](http://i.imgur.com/APPQ4kz.png)](http://venyr.com)
+# Venyr [![](http://i.imgur.com/tzHWhED.png)](http://venyr.com)
 
 Broadcast your current [Rdio](http://rdio.com) playback via WebSockets and let others listen to it.
 
