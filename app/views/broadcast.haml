@@ -1,0 +1,15 @@
+- content_for :title do
+  — Broadcast
+
+#content.broadcast{ data: { type: 'broadcast' } }
+  .loading
+    %span Loading…
+
+  .authenticated-content
+    .intro
+      %p
+        %strong Yay! You are now broadcasting.<br />
+        %small Keep this tab open and everything will be alright.
+      %p Users can listen to what you’re listening to by going to:
+      %pre <a class="broadcast-url">http://#{request.host}#{request.port != 80 ? ":#{request.port}" : '' }/listen/<span class="rdio-user" /></a>
+    = partial :hud

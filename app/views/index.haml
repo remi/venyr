@@ -1,0 +1,31 @@
+- content_for :title do
+  — Broadcast your Rdio playback to your friends
+
+#content.home{ data: { type: 'home' } }
+  .loading
+    %span Loading…
+
+  .authenticated-content
+    .broadcast
+      %p
+        <strong>Broadcast your Rdio playback</strong><br />
+        People will be able to sync their Rdio playback to yours.
+      %a.button.broadcast{ href: '/broadcast' } Broadcast!
+
+    .or
+      %span or
+
+    .listen
+      %p
+        Know a friend who’s broadcasting?<br />
+        <strong>Sync your Rdio playback</strong> to his/her.
+      %form{ action: '/listen/%user', method: 'get' }
+        %p
+          %label{ for: 'listen-user' } Listen to
+          %input{ id: 'listen-user', type: 'text', placeholder: 'remi' }
+          %button.button.listen{ type: 'submit' } Listen!
+
+  .unauthenticated-content
+    %p Welcome to Venyr, the best way to broadcast your Rdio playback with your friends.
+    %p.rdio-login
+      %a.button.button-large{ href: "javascript://" } Sign in with Rdio

@@ -1,0 +1,28 @@
+!!!
+%html{ :lang => :en }
+  %head
+    %meta{ :charset => "utf-8" }
+    %title Venyr #{yield_content(:title)}
+    = stylesheet_tag('screen')
+    = stylesheet_tag('http://fonts.googleapis.com/css?family=Signika+Negative:300,400,600,700')
+    = javascript_tag("https://rdio.com/api/api.js?client_id=#{ENV['RDIO_CLIENT_ID']}")
+    %link{ :type => "image/png", :href => image_path("favicon.png"), :rel => "shortcut icon" }
+    = yield_content(:head)
+  %body
+    #wrap
+      %header
+        %h1
+          %a{ href: '/' }
+            %span V<small>enyr</small>
+        %hr
+      = yield
+    %footer
+      %hr
+      %p Made by <a href="http://exomel.com">Rémi Prévost</a> while listening to <a href="http://www.rdio.com/label/Kitsun%C3%A9/">Kistuné</a> and <a href="http://www.rdio.com/people/remi/playlists/2536658/%E2%80%9CYou_stayed_up_all_night%2C_the_night_before_an_all_night_telethon%E2%80%9D_%E2%80%94_Tom_Haverford/">this playlist</a>.
+      %p.powered Powered by <a href="http://rubygems.org/gems/eventmachine">EventMachine</a>, <a href="http://rubygems.org/gems/thin">Thin</a>, <a href="http://redis.io">Redis</a>, <a href="http://zeptojs.com/">Zepto.js</a> and <a href="http://www.rdio.com">Rdio</a>.
+      %p.source Source code available on <a href="https://github.com/remiprev/venyr">GitHub</a>.
+    :plain
+      <script>document.write('<script src="//cdnjs.cloudflare.com/ajax/libs/' +
+      ('__proto__' in {} && !/firefox\/3/i.test(navigator.userAgent) ?
+      'zepto/1.0rc1/zepto.min.js' : 'jquery/1.9.0/jquery.min.js') + '"><\/script>')</script>
+    = javascript_tag('application')

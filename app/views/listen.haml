@@ -1,0 +1,13 @@
+- content_for :title do
+  — Listening to #{@user}
+
+#content.listen{ data: { type: 'listen', user: @user } }
+  .loading
+    %span Loading…
+
+  .authenticated-content
+    .intro
+      %p
+        %strong Yay! You are now listening to <a href="http://www.rdio.com/people/#{@user}">#{@user}</a>’s broadcast.<br />
+        %small Keep this tab open and everything will be alright.
+    = partial :hud
