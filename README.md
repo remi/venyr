@@ -4,7 +4,7 @@ Broadcast your current [Rdio](http://rdio.com) playback via WebSockets and let o
 
 ## Installation
 
-```shell
+```bash
 $ git clone git@github.com:remiprev/venyr.git && cd venyr
 ```
 
