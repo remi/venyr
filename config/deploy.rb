@@ -23,40 +23,40 @@ role :app, "venyr-prod"
 
 namespace :deploy do
   desc "Start the app"
-  task :start, :roles => :app do
+  task :start, roles: :app do
     ports.each do |port|
       run "cd #{current_path} && bundle exec thin start -C #{current_path}/config/thin.yml --port #{port} --environment production"
     end
   end
 
   desc "Stop the app"
-  task :stop, :roles => :app do
+  task :stop, roles: :app do
     ports.each do |port|
       run "cd #{current_path} && bundle exec thin stop -C #{current_path}/config/thin.yml --force --port #{port} --environment production"
     end
   end
 
   desc "Restart the app"
-  task :restart, :roles => :app do
+  task :restart, roles: :app do
     ports.each_with_index do |port, index|
       run "cd #{current_path} && bundle exec thin restart -C #{current_path}/config/thin.yml --force --port #{port} --environment production"
     end
   end
 
   desc "Replace paths in thin.yml"
-  task :thin_config, :roles => :app do
+  task :thin_config, roles: :app do
     run "sed -i 's/DEPLOY_SHARED_PATH/#{shared_path.gsub(/\//,"\\/")}/g' #{current_path}/config/thin.yml"
     run "sed -i 's/DEPLOY_RELEASE_PATH/#{release_path.gsub(/\//,"\\/")}/g' #{current_path}/config/thin.yml"
     run "sed -i 's/DEPLOY_CURRENT_PATH/#{current_path.gsub(/\//,"\\/")}/g' #{current_path}/config/thin.yml"
   end
 
   desc "Copy .rbenv-vars file"
-  task :rbenv_vars, :roles => :app do
+  task :rbenv_vars, roles: :app do
     run "cp #{shared_path}/.rbenv-vars #{current_path}/.rbenv-vars"
   end
 
   desc "Remove git crumbles"
-  task :git_clean, :roles => :app do
+  task :git_clean, roles: :app do
     run "rm -fr `find #{deploy_to}/releases -iname \".git*\"`"
   end
 

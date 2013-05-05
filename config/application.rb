@@ -7,7 +7,7 @@ class App < Sinatra::Base
 
   # Configuration
   configure do
-    set :haml, :format => :html5, :attr_wrapper => '"', :ugly => false
+    set :haml, format: :html5, attr_wrapper: '"', ugly: false
     set :root, proc { File.expand_path('./') }
     set :views, proc { File.join(root, 'app/views') }
     set :public_folder, proc { File.join(root, 'public') }
@@ -43,7 +43,7 @@ class App < Sinatra::Base
       end
 
       socket.onmessage do |message|
-        parsed_message = MultiJson.load(message, :symbolize_keys => true) rescue(error! socket)
+        parsed_message = MultiJson.load(message, symbolize_keys: true) rescue(error! socket)
 
         EM.next_tick do
           begin
@@ -92,7 +92,7 @@ class App < Sinatra::Base
 
       socket.onmessage do |message|
         begin
-          parsed_message = MultiJson.load(message, :symbolize_keys => true)
+          parsed_message = MultiJson.load(message, symbolize_keys: true)
           EM.next_tick { pong!(socket) if parsed_message[:event] == 'ping' }
         rescue
           error!(socket)

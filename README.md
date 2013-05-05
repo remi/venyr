@@ -24,7 +24,7 @@ Configure and start the app:
 
 ```bash
 # Your Rdio application Client ID (you need access to the new beta Rdio API)
-$ export RDIO_CLIENT_ID=… 
+$ export RDIO_CLIENT_ID=…
 
 # The host that resolves to 127.0.0.1
 $ export CANONICAL_HOST=venyr.local
