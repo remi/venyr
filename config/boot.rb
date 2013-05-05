@@ -20,6 +20,9 @@ Dir[File.expand_path('../../app/helpers/**/*.rb', __FILE__)].each do |file|
   require "#{dirname}/#{file_basename}"
 end
 
+# Redis
+REDIS = Redis.new
+
 # Application setup
 ENV['CANONICAL_HOST'] || raise(StandardError.new "You must provide a “CANONICAL_HOST” environment variable.")
 ENV['RDIO_CLIENT_ID'] || raise(StandardError.new "You must provide a “RDIO_CLIENT_ID” environment variable.")

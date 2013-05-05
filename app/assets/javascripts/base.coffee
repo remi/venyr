@@ -2,7 +2,7 @@ window.Venyr = {}
 
 class Venyr.Base
   constructor: (opts = {}) ->
-    @debug = false
+    @debug = true
     @opts = opts
     @fatalError = false
     R.ready(@init)

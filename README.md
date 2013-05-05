@@ -45,4 +45,4 @@ $ open http://venyr.local:5200
 
 ## Todo
 
-* Bring back listeners count
+* Clean up the big `request.websocket` blocks in `config/application.rb`.

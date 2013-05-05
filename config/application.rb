@@ -12,8 +12,8 @@ class App < Sinatra::Base
     set :views, proc { File.join(root, 'app/views') }
     set :public_folder, proc { File.join(root, 'public') }
     set :rdio, Rdio.new
-    set :redis, Redis.new
     set :listen, Listen.new
+    set :broadcast, Broadcast.new
 
     enable :static
     enable :partial_underscores
@@ -28,11 +28,14 @@ class App < Sinatra::Base
   get "/live/broadcast/:user" do
     request.websocket do |socket|
       user = params[:user]
+      channel = OpenStruct.new(socket: socket, user: user)
 
       socket.onopen do
         begin
           if current_user && current_user.username == user
             logger.info "Broadcast started for #{user}"
+            REDIS.hset "listen.#{user}", "listeners", 0
+            settings.broadcast['channels'] << channel
           else
             logger.info "Broadcast rejected for #{user}"
             halt 401
@@ -51,11 +54,11 @@ class App < Sinatra::Base
               when 'ping'
                 pong!(socket)
               when 'playingTrackChange'
-                settings.redis.hset "user.#{user}", "track", MultiJson.dump(parsed_message[:data][:track])
-                settings.redis.publish "user.#{user}", message
+                REDIS.hset "listen.#{user}", "track", MultiJson.dump(parsed_message[:data][:track])
+                REDIS.publish "listen.#{user}", message
               when 'playStateChange'
-                settings.redis.hset "user.#{user}", "state", parsed_message[:data][:state]
-                settings.redis.publish "user.#{user}", message
+                REDIS.hset "listen.#{user}", "state", parsed_message[:data][:state]
+                REDIS.publish "listen.#{user}", message
             end
           rescue
             error!(socket)
@@ -64,7 +67,8 @@ class App < Sinatra::Base
       end
 
       socket.onclose do |socket|
-        settings.redis.del "user.#{user}"
+        settings.broadcast['channels'].delete(channel)
+        REDIS.del "listen.#{user}"
       end
     end
   end
@@ -77,12 +81,13 @@ class App < Sinatra::Base
       socket.onopen do
         begin
           settings.listen['channels'] << channel
+          Broadcast.increase_listeners_count(user)
 
-          if track = settings.redis.hget("user.#{user}", "track")
+          if track = REDIS.hget("listen.#{user}", "track")
             socket.send MultiJson.dump(event: 'playingTrackChange', data: { track: MultiJson.load(track) })
           end
 
-          if state = settings.redis.hget("user.#{user}", "state")
+          if state = REDIS.hget("listen.#{user}", "state")
             socket.send MultiJson.dump(event: 'playStateChange', data: { state: state })
           end
         rescue
@@ -101,6 +106,7 @@ class App < Sinatra::Base
 
       socket.onclose do
         settings.listen['channels'].delete(channel)
+        Broadcast.decrease_listeners_count(user)
       end
     end
   end
@@ -110,7 +116,7 @@ class App < Sinatra::Base
   get("/broadcast") { haml :broadcast }
   get("/listen/:user") do
     @user = params[:user]
-    if settings.redis.hget("user.#{@user}", 'track')
+    if REDIS.hget("listen.#{@user}", 'track')
       haml :listen
     else
       @message = :no_broadcasting
