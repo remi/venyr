@@ -1,3 +1,6 @@
+require 'dotenv'
+Dotenv.load
+
 # Bundler setup
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
 require 'bundler/setup' if File.exists?(ENV['BUNDLE_GEMFILE'])
@@ -21,7 +24,7 @@ Dir[File.expand_path('../../app/helpers/**/*.rb', __FILE__)].each do |file|
 end
 
 # Redis
-uri = URI.parse ENV["REDISTOGO_URL"]
+uri = URI.parse ENV["REDISTOGO_URL"] || ENV['REDIS_URL'] || 'redis://127.0.0.1:6379/1'
 REDIS = Redis.new(host: uri.host, port: uri.port, password: uri.password)
 
 # Application setup

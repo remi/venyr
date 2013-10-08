@@ -31,4 +31,7 @@ group :development do
   gem 'shotgun', require: false
   gem 'capistrano', require: false
   gem 'capistrano_colors', require: false
+  gem 'foreman', require: false
+  gem 'hanzo', '0.2.3', require: false
+  gem 'dotenv'
 end
