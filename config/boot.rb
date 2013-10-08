@@ -21,7 +21,8 @@ Dir[File.expand_path('../../app/helpers/**/*.rb', __FILE__)].each do |file|
 end
 
 # Redis
-REDIS = Redis.new
+uri = URI.parse ENV["REDISTOGO_URL"]
+REDIS = Redis.new(host: uri.host, port: uri.port, password: uri.password)
 
 # Application setup
 ENV['CANONICAL_HOST'] || raise(StandardError.new "You must provide a “CANONICAL_HOST” environment variable.")
